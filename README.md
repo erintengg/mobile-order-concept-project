@@ -4,6 +4,8 @@ A front-end prototype of a mobile food-ordering app for UCLA campus dining. It e
 
 Built with plain HTML, CSS, and JavaScript. There is no framework, no dependencies, and no build step.
 
+**[View the case study](https://erinteng.com/work/ucla-mobile-order)**
+
 > **Disclaimer:** This is an unofficial design prototype and is not affiliated with or endorsed by UCLA. All locations, meals, prices, orders, and profile details are mock data.
 
 ## Features
