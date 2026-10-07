@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UCLA Mobile Order Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="phone">
+
+  <!-- ================= HOME ================= -->
+  <div class="screen on" id="screen-home">
+    <header>
+      <div class="brand">
+        <span class="wordmark">UCLA</span>
+        <h1>Mobile Order</h1>
+      </div>
+      <div style="display:flex">
+        <button class="icon-btn" onclick="go('cart')" aria-label="Open cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span class="badge">1</span></button>
+        <button class="icon-btn" onclick="go('profile')" aria-label="Open profile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></button>
+      </div>
+    </header>
+
+    <div class="search-wrap">
+      <div class="search" id="homeSearch">
+        <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input id="homeQuery" placeholder="Search food or dining locations" oninput="homeSearch()" />
+        <button class="clear" onclick="clearHomeSearch()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Search results -->
+    <section id="homeResults" style="display:none">
+      <p class="eyebrow">Search results</p>
+      <div id="homeResultsList"></div>
+    </section>
+
+    <!-- Home feed -->
+    <div id="homeFeed">
+      <button class="active" onclick="openSheet('pickup')">
+        <div class="top"><span class="lbl">Active order · #4821</span><span class="ready">READY IN ~4 MIN</span></div>
+        <div class="mid"><div><h2>Epicuria at Ackerman</h2><p class="where"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> A Level · Counter 3</p></div><span style="font-size:22px">›</span></div>
+        <div class="bar"><div></div></div>
+        <div class="steps"><span>Preparing</span><span>Ready for pickup</span></div>
+        <div class="dir"><span style="color:var(--gold)">➤</span> Enter Ackerman from Bruin Walk, then go down one level.</div>
+      </button>
+      <section class="sec">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><p class="eyebrow2">Around you</p><h2 class="h2" style="cursor:pointer" onclick="go('dining')">Nearby dining</h2></div>
+          <div class="toggle"><button class="on" id="tList" onclick="homeMode(0)" aria-label="Show list">☰</button><button id="tMap" onclick="homeMode(1)" aria-label="Show map">🗺</button></div>
+        </div>
+        <div class="list" id="homeList">
+          <button onclick="openLocation('EA')"><span class="code">EA</span><span><b>Epicuria at Ackerman</b><small>Ackerman Union · A Level · 3 min walk</small></span><span class="eta"><b>~8 min</b><small>pickup</small></span></button>
+          <button onclick="openLocation('LV')"><span class="code">LV</span><span><b>Lu Valle Commons</b><small>Dodd Hall courtyard · 6 min walk</small></span><span class="eta"><b>~12 min</b><small>pickup</small></span></button>
+          <button onclick="openLocation('SH')"><span class="code">SH</span><span><b>The Study at Hedrick</b><small>Hedrick Hall · 1st floor · 9 min walk</small></span><span class="eta"><b>Estimate unavailable</b><small>pickup</small></span></button>
+        </div>
+        <div class="map" id="homeMap">
+          <button class="pin" style="left:18%;top:30%" onclick="openLocation('EA')">EA</button>
+          <button class="pin" style="left:62%;top:18%" onclick="openLocation('LV')">LV</button>
+          <button class="pin" style="left:45%;top:62%" onclick="openLocation('SH')">SH</button>
+        </div>
+        <p class="note">ⓘ Pickup estimates may shift with kitchen volume.</p>
+      </section>
+      <section class="sec">
+        <p class="eyebrow2">Order again</p><h2 class="h2">Quick reorder</h2>
+        <div class="reorder">
+          <button onclick="openSheet('food')"><img src="assets/turkey-caprese.jpg" alt="Turkey caprese sandwich"/><span class="t"><b>Turkey caprese sandwich</b><small>Epicuria · $12.50</small></span></button>
+          <button onclick="toast('Poke bowl added to order')"><span class="ph">POKE</span><span class="t"><b>Poke bowl</b><small>Lu Valle · $10.75</small></span></button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= DINING ================= -->
+  <div class="screen" id="screen-dining">
+    <header>
+      <div class="brand">
+        <span class="wordmark" onclick="go('home')">UCLA</span>
+        <h1>Nearby Dining<small>Westwood campus</small></h1>
+      </div>
+    </header>
+
+    <div class="search-wrap">
+      <div class="search" id="diningSearch">
+        <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input id="diningQuery" placeholder="Search meals or locations" oninput="diningSearch()" />
+        <button class="clear" onclick="clearDiningSearch()">Clear</button>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip on" data-f="All" onclick="setFilter('All')">All</button>
+        <button class="chip" data-f="Vegetarian" onclick="setFilter('Vegetarian')">Vegetarian</button>
+        <button class="chip" data-f="No nuts" onclick="setFilter('No nuts')">No nuts</button>
+        <button class="chip" data-f="Under 10 min" onclick="setFilter('Under 10 min')">Under 10 min</button>
+      </div>
+    </div>
+
+    <section>
+      <p class="eyebrow">Dining locations</p>
+      <div id="diningLocations"></div>
+      <div class="map">
+        <button class="pin" style="left:18%;top:30%" onclick="openLocation('EA')">EA</button>
+        <button class="pin" style="left:62%;top:18%" onclick="openLocation('LV')">LV</button>
+        <button class="pin" style="left:45%;top:62%" onclick="openLocation('SH')">SH</button>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Meals nearby</p>
+      <div id="diningMeals"></div>
+    </section>
+  </div>
+
+  <!-- ================= CART ================= -->
+  <div class="screen" id="screen-cart">
+    <header>
+      <div class="brand">
+        <span class="wordmark" onclick="go('home')">UCLA</span>
+        <h1>Your cart<small>Epicuria at Ackerman</small></h1>
+      </div>
+    </header>
+
+    <div id="cartBody">
+      <section>
+        <p class="eyebrow">Pickup</p>
+        <div class="card" style="margin-top:8px">
+          <h3 class="font-display" style="font-weight:700">Epicuria at Ackerman</h3>
+          <p style="font-size:13px;color:var(--muted);margin-top:4px">Ackerman Union · A Level</p>
+          <p style="font-size:13px;font-weight:700;color:var(--success);margin-top:10px">Estimated pickup: 8–12 min</p>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow">Order</p>
+        <div class="card" style="margin-top:8px">
+          <div style="display:flex;gap:12px;align-items:center">
+            <span class="meal-img">🥪</span>
+            <span style="flex:1">
+              <h3 class="font-display" style="font-size:14px;font-weight:700">Turkey caprese sandwich</h3>
+              <p style="font-size:12px;color:var(--muted);margin-top:2px">Extra basil · Light balsamic</p>
+              <p style="font-size:14px;font-weight:800;margin-top:6px" id="cartItemTotal">$12.50</p>
+            </span>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:12px">
+            <div class="qty">
+              <button onclick="setQty(-1)">−</button><span id="qty">1</span><button onclick="setQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow">Payment</p>
+        <div class="card" style="margin-top:8px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px">💳</span>
+          <span style="flex:1"><b style="font-size:14px">BruinCard</b><br><small style="color:var(--muted)">Ending in 4821</small></span>
+          <span style="font-size:13px;font-weight:700;color:var(--blue)">Change</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="row"><span style="color:var(--muted)">Subtotal</span><span id="subtotal">$12.50</span></div>
+        <div class="row"><span style="color:var(--muted)">Tax</span><span>$1.14</span></div>
+        <div class="row"><b class="font-display" style="font-size:17px">Total</b><b class="font-display" style="font-size:17px" id="total">$13.64</b></div>
+        <button class="btn" id="placeBtn" onclick="placeOrder()">Place order · $13.64</button>
+      </section>
+    </div>
+
+    <div id="cartDone" style="display:none;text-align:center;padding:80px 24px 0">
+      <div style="width:64px;height:64px;margin:0 auto;border-radius:999px;background:var(--blue-soft);display:grid;place-items:center;font-size:28px;color:var(--blue)">✓</div>
+      <h2 class="font-display" style="font-size:24px;font-weight:800;margin-top:20px">Order confirmed</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px">We'll update your pickup time as the kitchen prepares your order.</p>
+      <button class="btn" onclick="go('home')">Track order</button>
+    </div>
+  </div>
+
+  <!-- ================= PROFILE ================= -->
+  <div class="screen" id="screen-profile">
+    <header>
+      <div class="brand">
+        <span class="wordmark" onclick="go('home')">UCLA</span>
+        <h1>Profile</h1>
+      </div>
+    </header>
+
+    <section>
+      <div class="card" style="display:flex;align-items:center;gap:14px">
+        <div class="avatar">ET</div>
+        <div style="flex:1">
+          <h2 class="font-display" style="font-size:18px;font-weight:800">Erin Teng</h2>
+          <p style="font-size:12px;color:var(--muted);margin-top:2px">UCLA student · she/her</p>
+        </div>
+        <button class="chip" style="background:var(--gold);border-color:var(--gold);color:var(--gold-dark);font-weight:800">Edit</button>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Dining</p>
+      <div class="card" style="margin-top:8px;display:flex">
+        <div class="stat"><b>12</b><small>Orders this quarter</small></div>
+        <div class="stat"><b>4</b><small>Favorites</small></div>
+        <div class="stat"><b>EA</b><small>Preferred location</small></div>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Account</p>
+      <div class="card" style="margin-top:8px">
+        <div class="row"><span>💳 BruinCard</span><small style="color:var(--muted)">Ending in 4821</small></div>
+        <div class="row"><span>🔔 Notifications</span><input type="checkbox" checked /></div>
+        <div class="row"><span>❓ Help & support</span><span style="color:var(--muted)">›</span></div>
+        <div class="row"><span style="color:#B3261E;font-weight:600">Sign out</span></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= BOTTOM NAV ================= -->
+  <nav class="tabbar">
+    <button class="on" data-tab="home" onclick="go('home')">🏠<span>Home</span></button>
+    <button data-tab="dining" onclick="go('dining')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span>Dining</span></button>
+    <button data-tab="cart" onclick="go('cart')">🛍️<span>Orders</span><span class="badge">1</span></button>
+    <button data-tab="profile" onclick="go('profile')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span>Profile</span></button>
+  </nav>
+
+  <!-- ================= SLIDE-UP PANELS ================= -->
+  <div class="overlay" id="overlay" onclick="if(event.target===this)closeSheet()">
+    <!-- Pickup -->
+    <div class="sheet" id="sheet-pickup" style="display:none">
+      <div class="grab"></div>
+      <span class="pill">READY IN ~4 MIN</span>
+      <h2 style="margin-top:10px">Pickup details</h2>
+      <p class="sub">Order #4821 · Turkey caprese sandwich</p>
+      <div class="row"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Location</span><b>Epicuria at Ackerman</b></div>
+      <div class="row"><span>🏢 Floor</span><b>A Level · Counter 3</b></div>
+      <div class="row"><span>🚶 Walking</span><b>3 min from Bruin Walk</b></div>
+      <div class="qr"><span>SCAN TO PICK UP</span></div>
+      <p class="sub" style="text-align:center;margin-top:10px">Screen brightness boosts automatically for scanning.</p>
+      <button class="btn" onclick="closeSheet()">Got it</button>
+    </div>
+
+    <!-- Food detail -->
+    <div class="sheet" id="sheet-food" style="display:none">
+      <div class="grab"></div>
+      <div class="meal-img" style="width:100%;height:140px;font-size:52px">🥪</div>
+      <h2 style="margin-top:14px">Turkey caprese sandwich</h2>
+      <p class="sub">Roasted turkey, fresh mozzarella, tomato, basil, pesto, and balsamic glaze on toasted ciabatta.</p>
+      <div style="margin-top:10px">
+        <span class="tag">High protein</span>
+        <span class="tag" style="background:#FFF3CD;color:#7A5C00">Contains milk</span>
+        <span class="tag" style="background:#FFF3CD;color:#7A5C00">Contains wheat</span>
+      </div>
+      <div class="row"><span>✏️ Customize</span><b>No mozzarella</b></div>
+      <div class="row"><span>🕒 Last time</span><b>Extra basil · Light balsamic</b></div>
+      <button class="btn" onclick="closeSheet();toast('Turkey caprese sandwich added to order')">Reorder · $12.50</button>
+    </div>
+
+    <!-- Location detail -->
+    <div class="sheet" id="sheet-location" style="display:none">
+      <div class="grab"></div>
+      <span class="loc-chip" id="locChip">EA</span>
+      <h2 style="margin-top:12px" id="locName">Epicuria at Ackerman</h2>
+      <p class="sub" id="locPlace">Ackerman Union · A Level</p>
+      <div class="row"><span>🚶 Walking time</span><b id="locWalk">3 min</b></div>
+      <div class="row"><span>🕒 Pickup estimate</span><b id="locPickup">~8 min</b></div>
+      <div class="row"><span>⏰ Hours</span><b id="locHours">Open until 8 PM</b></div>
+      <p class="sub" style="margin-top:8px">Estimates update with kitchen volume and may change.</p>
+      <button class="btn" onclick="closeSheet();toast('Opening walking directions…')">Open walking directions</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
